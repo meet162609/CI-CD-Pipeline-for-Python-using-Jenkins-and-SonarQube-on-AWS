@@ -112,7 +112,7 @@ source myenv/bin/activate
 ```bash
 sudo apt install python3-pip -y
 ```
-
+**Then access: `http://<Jenkins_Public_IP>:8080`**
 
 ---
 
@@ -131,6 +131,7 @@ sudo apt install python3-pip -y
        - Kind: Secret text
        - Secret: `<SonarQube token>`
        - ID: `sonar-server`
+       - Description: `sonar-server`
 
 3. **Configure Sonar Scanner Tool:**
    - Go to **Manage Jenkins > Tools > SonarQube Scanner installations**
@@ -141,7 +142,7 @@ sudo apt install python3-pip -y
 ## 📦 Generate Token from SonarQube
 
 - Go to **Administration > Security > Users**
-- Click `...` > Generate Token > Copy
+- Click `...` > Generate Token > Copy > In Secret Text
 
 ---
 
@@ -227,6 +228,7 @@ Visit `http://<SonarQube_Public_IP>:9000` to see analysis results.
 ---
 
 ---
+# Outputs
 
 ![Output Screenshot](Sonar.png)
 ![Output Screenshot](Qube.png)
