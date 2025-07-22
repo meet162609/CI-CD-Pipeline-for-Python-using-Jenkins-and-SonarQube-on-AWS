@@ -129,7 +129,7 @@ sudo apt install python3-pip -y
      - Add credentials:
        - Kind: Secret text
        - Secret: `<SonarQube token>`
-       - ID: `sonar-server`
+       - ID: `SONAR_TOKEN`
        - Description: `sonar-server`
 
 3. **Configure Sonar Scanner Tool:**
@@ -166,7 +166,7 @@ pipeline {
 
         stage('Git Checkout') {
             steps {
-                git branch: 'master', url: '<Your GitHub Repo>'
+                git branch: 'main', url: 'https://github.com/meet162609/CI-CD-Pipeline-for-Python-using-Jenkins-and-SonarQube-on-AWS.git'
             }
         }
 
@@ -198,17 +198,20 @@ pipeline {
         stage('Sonar') {
             steps {
                 withSonarQubeEnv('sonar-server') {
-                    sh '''#!/bin/bash
-                    set -e
-                    export SONAR_SCANNER_OPTS="-Xmx1024m"
-                    $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectKey=Python-project \
-                        -Dsonar.projectName=Python-project \
-                        -Dsonar.sources=. \
-                        -Dsonar.exclusions=venv/** \
-                        -Dsonar.python.coverage.reportPaths=coverage.xml \
-                        -Dsonar.sourceEncoding=UTF-8
-                    '''
+                    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                        sh '''#!/bin/bash
+                        set -e
+                        export SONAR_SCANNER_OPTS="-Xmx1024m"
+                        $SCANNER_HOME/bin/sonar-scanner \
+                            -Dsonar.projectKey=Python-project \
+                            -Dsonar.projectName=Python-project \
+                            -Dsonar.sources=. \
+                            -Dsonar.exclusions=venv/** \
+                            -Dsonar.python.coverage.reportPaths=coverage.xml \
+                            -Dsonar.sourceEncoding=UTF-8 \
+                            -Dsonar.login=$SONAR_TOKEN
+                        '''
+                    }
                 }
             }
         }
